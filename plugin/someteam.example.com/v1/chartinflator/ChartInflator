@@ -60,6 +60,7 @@ function parseYaml {
 }
 
 TMP_DIR=$(mktemp -d)
+HELM_VER=$(helm version --short)
 
 parseYaml $1
 
@@ -93,8 +94,10 @@ function doHelm {
   $helmBin --home $helmHome $@
 }
 
-# The init command is extremely chatty
-doHelm init --client-only >& /dev/null
+if [[ $HELM_VER == v2* ]]
+  doHelm init --client-only >& /dev/null
+  releaseName="--name $releaseName"
+fi
 
 if [ ! -d "$chartHome/$chartName" ]; then
   doHelm fetch --untar \
@@ -103,9 +106,9 @@ if [ ! -d "$chartHome/$chartName" ]; then
 fi
 
 doHelm template \
-    --name $releaseName \
     --namespace $releaseNamespace \
     --values $valuesFile \
+    $releaseName \
     $chartHome/$chartName
 
 /bin/rm -rf $TMP_DIR
