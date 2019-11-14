@@ -22,7 +22,7 @@ example arbitrarily uses [_minecraft_], but should work
 for any chart.
 
 The following example assumes you have `helm`
-on your `$PATH`.
+[v2](https://v2.helm.sh/docs/using_helm/#install-helm) on your `$PATH`.
 
 Make a place to work:
 
