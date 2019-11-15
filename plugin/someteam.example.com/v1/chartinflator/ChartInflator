@@ -60,7 +60,7 @@ function parseYaml {
 }
 
 TMP_DIR=$(mktemp -d)
-HELM_VER=$(helm version --short)
+HELM_VER=$(helm version --client --short)
 
 parseYaml $1
 
@@ -94,11 +94,9 @@ function doHelm {
   HELM_HOME=$helmHome $helmBin $@
 }
 
-if [[ $HELM_VER == v2* ]]; then
+if [[ $HELM_VER != v3* ]]; then
   doHelm init --client-only >& /dev/null
   releaseName="--name $releaseName"
-else
-  helm repo add stable https://kubernetes-charts.storage.googleapis.com/ 
 fi
 
 if [ ! -d "$chartHome/$chartName" ]; then
