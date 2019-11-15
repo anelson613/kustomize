@@ -91,12 +91,14 @@ if [ -z "$releaseNamespace" ]; then
 fi
 
 function doHelm {
-  $helmBin --home $helmHome $@
+  HELM_HOME=$helmHome $helmBin $@
 }
 
-if [[ $HELM_VER == v2* ]]
+if [[ $HELM_VER == v2* ]]; then
   doHelm init --client-only >& /dev/null
   releaseName="--name $releaseName"
+else
+  helm repo add stable https://kubernetes-charts.storage.googleapis.com/ 
 fi
 
 if [ ! -d "$chartHome/$chartName" ]; then
